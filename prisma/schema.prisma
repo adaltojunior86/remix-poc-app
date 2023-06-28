@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Language {
+  id           Int                @id @default(autoincrement())
+  key          String             @unique
+  description  String
+  translations ResourceLanguage[]
+}
+
+model Module {
+  id        Int       @id @default(autoincrement())
+  key       String
+  resources Resource[]
+}
+
+model Resource {
+  id           Int                @id @default(autoincrement())
+  key          String             @unique
+  module       Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  moduleId     Int
+  translations ResourceLanguage[]
+}
+
+model ResourceLanguage {
+  value      String
+  resourceId Int
+  languageId Int
+  language   Language @relation(fields: [languageId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  resource   Resource @relation(fields: [resourceId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@id([languageId, resourceId])
+}
