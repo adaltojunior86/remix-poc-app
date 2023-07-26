@@ -5,8 +5,10 @@ import {
   AccordionIcon,
   Box,
   AccordionPanel,
+  Text,
+  Divider,
 } from '@chakra-ui/react';
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { resourceService } from '~/api/services/';
 
 export async function loader() {
@@ -18,26 +20,29 @@ export default function Index() {
   return (
     <>
       <div>Resources List</div>
-      <Accordion defaultIndex={[0]} allowMultiple>
+      <Accordion allowMultiple>
         {data.map((resource) => (
           <AccordionItem key={resource.id}>
             <h2>
               <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  {resource.key}
-                </Box>
+                <Link to={`/resources/edit/${resource.id}`}>
+                  <Text as="span" flex="1" textAlign="left">
+                    {resource.key}
+                  </Text>
+                </Link>
                 <AccordionIcon />
               </AccordionButton>
             </h2>
             <AccordionPanel>
-              <ul>
+              {/* <ul>
                 {resource.translations?.map((translation) => (
                   <li key={translation.language.key}>
-                    {translation.language.key}
-                    {translation.value}
+                    <Text display="inline-flex">{translation.language.key}</Text>
+                    <Divider display="inline-flex" height="4" orientation="vertical" />
+                    <Text display="inline-flex">{translation.value}</Text>
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </AccordionPanel>
           </AccordionItem>
         ))}
