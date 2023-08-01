@@ -1,19 +1,28 @@
-import { ReactNode, useContext, useEffect } from 'react';
+import React, { ReactNode, Suspense, useContext, useEffect } from 'react';
 import { cssBundleHref } from '@remix-run/css-bundle';
 import type { LinksFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { withEmotionCache } from '@emotion/react';
 import { ChakraProvider } from '@chakra-ui/react';
+import rdtStylesheet from 'remix-development-tools/stylesheet.css';
 import { Layout } from './components';
 import { ClientStyleContext, ServerStyleContext } from './api/context/chakra';
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
+  ...(rdtStylesheet && process.env.NODE_ENV === 'development'
+    ? [{ rel: 'stylesheet', href: rdtStylesheet }]
+    : []),
 ];
 
 interface DocumentProps {
   children: ReactNode;
 }
+
+const RemixDevTools =
+  process.env.NODE_ENV === 'development'
+    ? React.lazy(() => import('remix-development-tools'))
+    : undefined;
 const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) => {
   const serverStyleData = useContext(ServerStyleContext);
   const clientStyleData = useContext(ClientStyleContext);
@@ -54,6 +63,11 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        {RemixDevTools && (
+          <Suspense>
+            <RemixDevTools />
+          </Suspense>
+        )}
       </body>
     </html>
   );
