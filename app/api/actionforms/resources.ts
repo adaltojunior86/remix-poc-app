@@ -8,7 +8,7 @@ function validateResource(resource: IResource): ResourceActionData {
   if (!resource.key) {
     errors.key = true;
   }
-  if (!resource.module.id) {
+  if (!resource.moduleId) {
     errors.module = true;
   }
   if (!resource.translations) {
@@ -22,6 +22,7 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const resource = {} as IResource;
   const iterator = formData.entries();
+
   let data = iterator.next();
   while (!data.done) {
     const { value } = data;
