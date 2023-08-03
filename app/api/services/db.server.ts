@@ -9,17 +9,7 @@ declare global {
 let db: PrismaClient;
 
 if (process.env.NODE_ENV !== 'production') {
-  db = new PrismaClient({
-    log: [
-      {
-        emit: 'event',
-        level: 'query',
-      },
-    ],
-  });
-  db.$on('query', async (e) => {
-    console.log(`${e.query} ${e.params}`);
-  });
+  db = new PrismaClient();
 } else {
   if (!global.db) {
     global.db = new PrismaClient();
