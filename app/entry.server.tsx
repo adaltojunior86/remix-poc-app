@@ -7,7 +7,6 @@
 import { PassThrough } from 'node:stream';
 
 import type { EntryContext } from '@remix-run/node';
-import { Response } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import isbot from 'isbot';
 import { renderToPipeableStream, renderToString } from 'react-dom/server';
@@ -66,7 +65,6 @@ function handleBotRequest(
           const body = new PassThrough();
 
           responseHeaders.set('Content-Type', 'text/html');
-          debugger
           resolve(
             new Response(chackraConfig(remixContext, request), {
               headers: responseHeaders,
